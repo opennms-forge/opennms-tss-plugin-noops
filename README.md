@@ -1,4 +1,4 @@
-# Time Series Storage - NoOps [![CircleCI](https://circleci.com/gh/opennms-forge/opennms-tss-plugin-noops.svg?style=svg)](https://circleci.com/gh/opennms-forge/opennms-tss-plugin-inmemory)
+# Time Series Storage - NoOps [![CircleCI](https://circleci.com/gh/opennms-forge/opennms-tss-plugin-noops.svg?style=svg)](https://circleci.com/gh/opennms-forge/opennms-tss-plugin-noops)
 
 This plugin exposes a no operations implementation of the TimeSeriesStorage interface.
 It doesn't store data but counts the received samples.
