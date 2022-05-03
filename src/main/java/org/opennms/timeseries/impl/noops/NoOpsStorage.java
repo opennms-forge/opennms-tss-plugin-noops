@@ -30,10 +30,13 @@ package org.opennms.timeseries.impl.noops;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+
 import org.opennms.integration.api.v1.timeseries.Metric;
 import org.opennms.integration.api.v1.timeseries.Sample;
 import org.opennms.integration.api.v1.timeseries.TagMatcher;
@@ -41,18 +44,54 @@ import org.opennms.integration.api.v1.timeseries.TimeSeriesFetchRequest;
 import org.opennms.integration.api.v1.timeseries.TimeSeriesStorage;
 
 /**
- * Rejects but counts all written sapmples.
+ * Rejects but counts all written samples.
  * For performance tests.
  */
 public class NoOpsStorage implements TimeSeriesStorage {
 
+    private final int latencyMin;
+    private final int latencyMax;
+    private final Random random;
+
     private final MetricRegistry metrics = new MetricRegistry();
     private final Meter samplesWritten = metrics.meter("samplesWritten");
+
+    public NoOpsStorage(
+            final int latencyMin,
+            final int latencyMax) {
+        if (latencyMin < 0) {
+            throw new IllegalArgumentException("latencyMin cannot be smaller than 0");
+        }
+        if (latencyMax < 0) {
+            throw new IllegalArgumentException("latencyMax cannot be smaller than 0");
+        }
+        if (latencyMin > latencyMax) {
+            throw new IllegalArgumentException("latencyMin cannot be bigger than latencyMax");
+        }
+        this.latencyMin = latencyMin;
+        this.latencyMax = latencyMax;
+        this.random = new Random(42); // be deterministic
+    }
 
     @Override
     public void store(final List<Sample> samples) {
         Objects.requireNonNull(samples);
+        addLatency();
         samplesWritten.mark(samples.size());
+    }
+
+    private void addLatency() {
+        int latencyInMs;
+        if(this.latencyMin == this.latencyMax) {
+            latencyInMs = latencyMin;
+        } else {
+            latencyInMs = random.nextInt(latencyMax - latencyMin) + latencyMin;
+        }
+        try {
+            Thread.sleep(latencyInMs);
+        } catch (InterruptedException e) {
+             // nothing to do...
+        }
     }
 
     @Override

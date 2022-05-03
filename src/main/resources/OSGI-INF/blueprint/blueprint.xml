@@ -10,7 +10,18 @@
 		http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
 ">
 
-    <bean id="timeSeriesStorage" class="org.opennms.timeseries.impl.noops.NoOpsStorage"/>
+    <cm:property-placeholder id="org.opennms.plugins.tss.noops" persistent-id="org.opennms.plugins.tss.noops"
+      update-strategy="reload">
+        <cm:default-properties>
+            <cm:property name="latencyMin" value="5"/>
+            <cm:property name="latencyMax" value="10"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <bean id="timeSeriesStorage" class="org.opennms.timeseries.impl.noops.NoOpsStorage">
+        <argument value="${latencyMin}"/>
+        <argument value="${latencyMax}"/>
+    </bean>
     <service ref="timeSeriesStorage" interface="org.opennms.timeseries.impl.noops.NoOpsStorage" />
     <service ref="timeSeriesStorage" interface="org.opennms.integration.api.v1.timeseries.TimeSeriesStorage">
         <service-properties>

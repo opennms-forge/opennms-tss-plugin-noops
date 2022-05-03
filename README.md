@@ -11,6 +11,24 @@ It is not meant for production use.
 * activate in Karaf shell: ``bundle:install -s mvn:org.opennms.plugins.tss/noops/1.0.0-SNAPSHOT``
 * show statistics in Karaf shell: ``opennms-tss-noops:stats``
 
+**Configure**
+
+The default configuration has the following settings:
+```
+# write latency in ms. The store() method is blocked for n seconds.
+# Where latencyMin <= n <= latencyMax 
+latencyMin=5
+latencyMax=10
+```
+
+Change configuration via Karaf shell:
+```
+config:edit org.opennms.plugins.tss.noops
+latencyMin=5
+latencyMax=10
+config:update
+```
+
   
  
 
