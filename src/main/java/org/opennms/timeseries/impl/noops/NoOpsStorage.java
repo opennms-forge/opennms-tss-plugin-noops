@@ -85,10 +85,10 @@ public class NoOpsStorage implements TimeSeriesStorage {
         if(this.latencyMin == this.latencyMax) {
             latencyInMs = latencyMin;
         } else {
-            latencyInMs = random.nextInt(latencyMax - latencyMin) + latencyMin;
+            latencyInMs = random.nextInt(latencyMax +1 - latencyMin) + latencyMin; // max bound is exclusive, therefore +1
         }
         try {
-            Thread.sleep(latencyInMs);
+              Thread.sleep(latencyInMs);
         } catch (InterruptedException e) {
              // nothing to do...
         }

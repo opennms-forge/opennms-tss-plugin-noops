@@ -24,8 +24,8 @@ latencyMax=10
 Change configuration via Karaf shell:
 ```
 config:edit org.opennms.plugins.tss.noops
-latencyMin=5
-latencyMax=10
+property-set latencyMin 5
+property-set latencyMax 10
 config:update
 ```
 
